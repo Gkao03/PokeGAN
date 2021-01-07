@@ -10,7 +10,7 @@ class DCGANConvBlock(nn.Sequential):
     A convolutional block detailed in DCGAN paper. Consists of a convolution, batchnorm, and activation.
     No FC layers are used. Either ReLU is used for the Generator or LeakyReLU for the Discriminator
     """
-    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, activation):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, activation='ReLU'):
         super(DCGANConvBlock, self).__init__()
         self.add_module('conv', nn.ConvTranspose2d(in_channels=in_channels,
                                                    out_channels=out_channels,
