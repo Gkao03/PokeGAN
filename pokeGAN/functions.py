@@ -7,6 +7,11 @@ import random
 
 
 def weights_init(m):
+    """
+    weights initialization for netG and netD
+    :param m: model
+    :return:
+    """
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
         nn.init.normal_(m.weight.data, 0.0, 0.02)
