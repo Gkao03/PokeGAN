@@ -2,6 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
+import torchvision.transforms as transforms
 import os
 import random
 
@@ -18,3 +19,16 @@ def weights_init(m):
     elif classname.find('BatchNorm') != -1:
         nn.init.normal_(m.weight.data, 1.0, 0.02)
         nn.init.constant_(m.bias.data, 0)
+
+
+def transform_image_function(image_size, num_channels):
+    list_of_transforms = [
+        transforms.Resize(image_size),  # square resize
+        transforms.CenterCrop(image_size),  # square crop
+        transforms.ToTensor(),  # convert image to pytorch tensor
+        transforms.Normalize(mean=[0.5] * num_channels, std=[0.5] * num_channels)  # normalize the tensor
+    ]
+    transform = transforms.Compose(list_of_transforms)
+    return transform
+
+
