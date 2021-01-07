@@ -22,6 +22,12 @@ def weights_init(m):
 
 
 def transform_image_function(image_size, num_channels):
+    """
+    Returns a function that defines how the input images are transformed
+    :param image_size: n x n size of the image
+    :param num_channels: number of channels (3 for color)
+    :return: the transform function
+    """
     list_of_transforms = [
         transforms.Resize(image_size),  # square resize
         transforms.CenterCrop(image_size),  # square crop
