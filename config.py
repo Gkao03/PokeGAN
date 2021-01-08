@@ -4,7 +4,7 @@ import argparse
 def get_arguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--image_dir', default="images/", help="path to training images")
+    parser.add_argument('--image_dir', default="images", help="path to training images")
     parser.add_argument('--image_size', default=120, help="n x n size of image to be resized to")
     parser.add_argument('--batch_size', default=128, help="number of images in each batch")
     parser.add_argument('--netG', default='', help="path to netG (to continue training) if model state exists")
