@@ -27,6 +27,7 @@ def init_model(args):
 
 def train(args):
     device = get_device()
+    # don't forget to set the seed in the main train file
 
     # create Generator and Discriminator
     netG, netD = init_model(args)
