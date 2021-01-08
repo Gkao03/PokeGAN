@@ -37,3 +37,23 @@ class DCGANGenerator(nn.Module):
         for i, channel_size in enumerate(channel_sizes):
             # self.main.add_module('block%d' % (i+1), )
             pass
+
+    def _block(self, in_channels, out_channels, kernel_size, stride, padding):
+        """
+        A sequential convolutional block from DCGAN
+        :param in_channels: num channels in input
+        :param out_channels: num channels in output
+        :param kernel_size: n x n size of kernel (4 x 4 for DCGAN)
+        :param stride: stride size
+        :param padding: padding size
+        :return: convolutional block including convolution, batchnorm, relu
+        """
+        block = nn.Sequential()
+        block.add_module('conv', nn.ConvTranspose2d(in_channels=in_channels,
+                                                   out_channels=out_channels,
+                                                   kernel_size=kernel_size,
+                                                   stride=stride,
+                                                   padding=padding))
+        block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
+        block.add_module('relu', nn.ReLU(inplace=True))
+        return block
