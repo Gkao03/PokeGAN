@@ -10,6 +10,12 @@ class DCGANGenerator(nn.Module):
     The Generator architecture for DCGAN
     """
     def __init__(self, z_dim, features_g, channels_img):
+        """
+        Constructor for DCGAN Generator
+        :param z_dim: size (dimension) of noise vector (100 for original DCGAN)
+        :param features_g: size of feature maps in generator
+        :param channels_img: number of channels in image (3 for RGB)
+        """
         super(DCGANGenerator, self).__init__()
         self.main = nn.Sequential()
         channel_sizes = [features_g * 2 ** x for x in reversed(range(4))]  # [512, 256, 128, 64] -> 4 conv blocks
