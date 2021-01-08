@@ -50,7 +50,7 @@ def get_dataset(dataroot, image_size, num_channels):
     return dataset
 
 
-def get_dataLoader(dataroot, image_size, num_channels, batch_size):
+def get_dataloader(dataroot, image_size, num_channels, batch_size):
     dataset = get_dataset(dataroot, image_size, num_channels)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     return dataloader
