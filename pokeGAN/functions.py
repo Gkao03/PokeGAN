@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torchvision.datasets as dset
 import os
 import random
 
@@ -41,3 +42,15 @@ def transform_image_function(image_size, num_channels):
 def get_device():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     return device
+
+
+def get_dataset(dataroot, image_size, num_channels):
+    transform = transform_image_function(image_size, num_channels)
+    dataset = dset.ImageFolder(root=dataroot, transform=transform)
+    return dataset
+
+
+def get_dataLoader(dataroot, image_size, num_channels, batch_size):
+    dataset = get_dataset(dataroot, image_size, num_channels)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
+    return dataloader
