@@ -38,3 +38,6 @@ def transform_image_function(image_size, num_channels):
     return transform
 
 
+def get_device():
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    return device
