@@ -76,7 +76,7 @@ class DCGANDiscriminator(nn.Module):
 
         self.main.add_module('block1', self._block(channels_img, channel_sizes[0], 4, 2, 1, True))  # first conv block
         for i, channel_size in enumerate(channel_sizes[1:]):  # other conv blocks
-            self.main.add_module('block%d' % (i + 2), self._block(channel_size / 2, channel_size, 4, 2, 1, False))
+            self.main.add_module('block%d' % (i + 2), self._block(int(channel_size / 2), channel_size, 4, 2, 1, False))
 
         # last convolution
         self.main.add_module('lastConv', nn.ConvTranspose2d(in_channels=channel_sizes[-1],
