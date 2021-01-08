@@ -20,3 +20,9 @@ def init_model(args):
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
     print(netD)
+
+    return netG, netD
+
+
+def train(args):
+    pass
