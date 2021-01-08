@@ -47,3 +47,6 @@ class DCGANGenerator(nn.Module):
         block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
         block.add_module('relu', nn.ReLU(inplace=True))
         return block
+
+    def forward(self, x):
+        return self.main(x)
