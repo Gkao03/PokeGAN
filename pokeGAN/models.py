@@ -23,3 +23,17 @@ class DCGANConvBlock(nn.Sequential):
             self.add_module(activation, nn.ReLU(inplace=True))
         elif activation == 'leakyReLU':
             self.add_module(activation, nn.LeakyReLU(negative_slope=0.2, inplace=True))  # slope set to 0.2 in paper
+
+
+class DCGANGenerator(nn.Module):
+    """
+    The Generator architecture for DCGAN
+    """
+    def __init__(self, z_dim, features_g, channels_img):
+        super(DCGANGenerator, self).__init__()
+        self.main = nn.Sequential()
+        channel_sizes = [features_g * 2 ** x for x in reversed(range(5))]
+
+        for i, channel_size in enumerate(channel_sizes):
+            # self.main.add_module('block%d' % (i+1), )
+            pass
