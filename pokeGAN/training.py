@@ -88,8 +88,8 @@ def train(args):
             fake = netG(noise)
             label.fill_(fake_label)
 
-            # input fake batch through D and flatten
-            output = netD(fake).view(-1)
+            # input fake batch through D and flatten. detach does not effect the gradients in netG
+            output = netD(fake.detach()).view(-1)
 
             # calculate D's loss on all fake batch
             lossD_fake = criterion(output, label)
@@ -106,3 +106,25 @@ def train(args):
             # update D with optimizer
             optimizerD.zero_grad()
             optimizerD.step()
+
+            # ~ update Generator ~
+            netG.zero_grad()
+
+            # forward pass fake batch through D
+            output = netD(fake).view(-1)
+
+            # create label for G. Remember these 'fake' images are treated as 'real' in G
+            label.fill_(real_label)
+
+            # calculate G's loss. Ability of G to fool D
+            lossG = criterion(output, label)
+
+            # calculate gradients in backward pass
+            lossG.backward()
+
+            # save output
+            D_G_z2 = output.mean().item()
+
+            # update G
+            optimizerG.zero_grad()
+            optimizerG.step()
