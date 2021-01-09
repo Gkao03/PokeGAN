@@ -54,12 +54,3 @@ def get_dataloader(dataroot, image_size, num_channels, batch_size):
     dataset = get_dataset(dataroot, image_size, num_channels)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     return dataloader
-
-
-def post_config(args):
-    if args.manual_seed is None:
-        args.manual_seed = random.randint(1, 10000)
-    print("Random Seed: ", args.manual_seed)
-    random.seed(args.manual_seed)
-    torch.manual_seed(args.manual_seed)
-    return args

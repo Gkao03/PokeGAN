@@ -19,3 +19,13 @@ def get_arguments():
     parser.add_argument('--beta1', type=float, default=0.5, help="beta1 hyperparameter for optimizers")
 
     return parser
+
+
+def post_config(args):
+    if args.manual_seed is None:
+        args.manual_seed = random.randint(1, 10000)
+    print("Random Seed: ", args.manual_seed)
+    random.seed(args.manual_seed)
+    torch.manual_seed(args.manual_seed)
+    return args
+
