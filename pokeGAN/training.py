@@ -60,9 +60,9 @@ def train(args):
     num_cycles = 0  # training cycles (iterations)
 
     for epoch in range(args.num_epochs):
-        for batch_ndx, data, _ in enumerate(dataloader, 0):
+        for batch_ndx, data in enumerate(dataloader, 0):
             # setup the all real batch
-            batch = data.to(device)
+            batch = data[0].to(device)
             batch_size = batch.size(0)
 
             # ~ update Discriminator ~
