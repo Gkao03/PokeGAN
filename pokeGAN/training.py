@@ -68,6 +68,7 @@ def train(args):
             # ~ update Discriminator ~
             # first train with all real batch
             netD.zero_grad()  # zero out Discriminator gradient (don't accumulate)
+            optimizerD.zero_grad()
             output = netD(batch).view(-1)  # pass through Discriminator and flatten
             label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
 
@@ -109,6 +110,7 @@ def train(args):
 
             # ~ update Generator ~
             netG.zero_grad()
+            optimizerG.zero_grad()
 
             # forward pass fake batch through D
             output = netD(fake).view(-1)
