@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+import torch.utils as vutils
 import os
 from pokeGAN.functions import *
 from pokeGAN.models import *
@@ -128,3 +129,22 @@ def train(args):
             # update G
             optimizerG.zero_grad()
             optimizerG.step()
+
+            # Output training stats
+            print('[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
+                  % (epoch, args.num_epochs, batch_ndx, len(dataloader),
+                     lossD.item(), lossG.item(), D_x, D_G_z1, D_G_z2))
+
+            # Save Losses
+            G_losses.append(lossG.item())
+            D_losses.append(lossD.item())
+
+            # Check how the generator is doing by saving G's output on fixed_noise
+            if (num_cycles % 20 == 0) or ((epoch == args.num_epochs - 1) and (batch_ndx == len(dataloader) - 1)):
+                with torch.no_grad():
+                    fake = netG(fixed_noise).detach().cpu()
+                img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
+
+            num_cycles += 1
+
+            return G_losses, D_losses, img_list
