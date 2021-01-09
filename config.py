@@ -1,5 +1,6 @@
 import argparse
 import random
+import torch
 
 
 def get_arguments():
