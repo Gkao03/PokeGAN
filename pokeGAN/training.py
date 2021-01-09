@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import torch.utils as vutils
+import torchvision.utils as vutils
 import os
 from pokeGAN.functions import *
 from pokeGAN.models import *

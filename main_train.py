@@ -2,7 +2,7 @@ from config import get_arguments, post_config
 from pokeGAN.training import train
 from pokeGAN.functions import *
 import matplotlib.pyplot as plt
-import torch.utils as vutils
+import torchvision.utils as vutils
 
 
 if __name__ == "__main__":
