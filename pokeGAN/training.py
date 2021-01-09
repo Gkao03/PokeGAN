@@ -69,8 +69,7 @@ def train(args):
             # first train with all real batch
             netD.zero_grad()  # zero out Discriminator gradient (don't accumulate)
             output = netD(batch).view(-1)  # pass through Discriminator and flatten
-            num_labels = output.size(0)  # get size of output tensor
-            label = torch.full((num_labels,), real_label, dtype=torch.float, device=device)
+            label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
 
             # calculate loss
             lossD_real = criterion(output, label)
@@ -87,10 +86,10 @@ def train(args):
 
             # create fake images with G and labels to be compared with
             fake = netG(noise)
-            label.fill_(fake_label)
 
             # input fake batch through D and flatten. detach does not effect the gradients in netG
             output = netD(fake.detach()).view(-1)
+            label = torch.full((output.size(0),), fake_label, dtype=torch.float, device=device)
 
             # calculate D's loss on all fake batch
             lossD_fake = criterion(output, label)
@@ -115,7 +114,7 @@ def train(args):
             output = netD(fake).view(-1)
 
             # create label for G. Remember these 'fake' images are treated as 'real' in G
-            label.fill_(real_label)
+            label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
 
             # calculate G's loss. Ability of G to fool D
             lossG = criterion(output, label)
