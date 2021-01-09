@@ -1,4 +1,5 @@
 import argparse
+import random
 
 
 def get_arguments():
