@@ -15,13 +15,13 @@ def init_model(args):
     netG.apply(weights_init)
     if args.netG != '':
         netG.load_state_dict(torch.load(args.netG))
-    print(netG)
+    # print(netG)
 
     netD = DCGANDiscriminator(args.ndf, args.nc).to(device)
     netD.apply(weights_init)
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
-    print(netD)
+    # print(netD)
 
     return netG, netD
 
@@ -104,7 +104,7 @@ def train(args):
             lossD = lossD_fake + lossD_real
 
             # update D with optimizer
-            optimizerD.zero_grad()
+            # optimizerD.zero_grad()
             optimizerD.step()
 
             # ~ update Generator ~
@@ -126,7 +126,7 @@ def train(args):
             D_G_z2 = output.mean().item()
 
             # update G
-            optimizerG.zero_grad()
+            # optimizerG.zero_grad()
             optimizerG.step()
 
             # Output training stats
