@@ -147,4 +147,4 @@ def train(args):
 
             num_cycles += 1
 
-            return G_losses, D_losses, img_list
+    return G_losses, D_losses, img_list
