@@ -16,7 +16,7 @@ def init_model(args):
         netG.load_state_dict(torch.load(args.netG))
     print(netG)
 
-    netD = DCGANDiscriminator(args.ndf, args.nc)
+    netD = DCGANDiscriminator(args.ndf, args.nc).to(device)
     netD.apply(weights_init)
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
@@ -46,3 +46,63 @@ def train(args):
     # use ADAM optimizer. Change lr and beta1 based on DCGAN paper
     optimizerG = optim.Adam(netG.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
     optimizerD = optim.Adam(netD.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
+
+    # get the dataloader
+    dataloader = get_dataloader(args.image_dir, args.image_size, args.nc, args.batch_size)
+
+    # start training
+    print("Starting Training...")
+
+    img_list = []
+    G_losses = []
+    D_losses = []
+    num_cycles = 0  # training cycles (iterations)
+
+    for epoch in range(args.num_epochs):
+        for batch_ndx, data, _ in enumerate(dataloader, 0):
+            # setup the all real batch
+            batch = data.to(device)
+            batch_size = batch.size(0)
+
+            # ~ update Discriminator ~
+            # first train with all real batch
+            netD.zero_grad()  # zero out Discriminator gradient (don't accumulate)
+            output = netD(batch).view(-1)  # pass through Discriminator and flatten
+            num_labels = output.size(0)  # get size of output tensor
+            label = torch.full((num_labels,), real_label, dtype=torch.float, device=device)
+
+            # calculate loss
+            lossD_real = criterion(output, label)
+
+            # calculate gradients in backward pass
+            lossD_real.backward()
+
+            # save output
+            D_x = output.mean().item()
+
+            # next train with all fake batch from generator
+            # create random input noise to generator
+            noise = torch.randn(batch_size, args.nz, 1, 1, device=device)
+
+            # create fake images with G and labels to be compared with
+            fake = netG(noise)
+            label.fill_(fake_label)
+
+            # input fake batch through D and flatten
+            output = netD(fake).view(-1)
+
+            # calculate D's loss on all fake batch
+            lossD_fake = criterion(output, label)
+
+            # calculate gradients in backward pass
+            lossD_fake.backward()
+
+            # save output
+            D_G_z1 = output.mean().item()
+
+            # add fake D and real D gradients
+            lossD = lossD_fake + lossD_real
+
+            # update D with optimizer
+            optimizerD.zero_grad()
+            optimizerD.step()
