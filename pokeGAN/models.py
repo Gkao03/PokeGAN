@@ -123,8 +123,6 @@ class PokeGeneratorv1(nn.Module):
         """
         Constructor for version 1 of Generator for PokeGAN
         :param z_dim: size (dimension) of noise vector
-        :param features_g: size of feature maps in generator
-        :param channels_img: number of channels in image (4 for RGBA)
         """
         super(PokeGeneratorv1, self).__init__()
         self.main = nn.Sequential()
@@ -165,3 +163,54 @@ class PokeGeneratorv1(nn.Module):
 
     def forward(self, x):
         return self.main(x)
+
+
+class PokeDiscriminatorv1(nn.Module):
+    """
+    Version 1 Discriminator of PokeGAN
+    """
+    def __init__(self):
+        """
+        Constructor for version 1 of Discriminator for PokeGAN
+        """
+        super(PokeDiscriminatorv1, self).__init__()
+        self.main = nn.Sequential()
+        self.main.add_module('block1', self._block(3, 64, 4, 2, 1))
+        self.main.add_module('block2', self._block(64, 128, 4, 2, 1))
+        self.main.add_module('block3', self._block(128, 128, 4, 2, 1))
+        self.main.add_module('block4', self._block(128, 128, 4, 2, 1))
+
+        self.main.add_module('lastConv', nn.ConvTranspose2d(in_channels=128,
+                                                            out_channels=1,
+                                                            kernel_size=4,
+                                                            stride=1,
+                                                            padding=0,
+                                                            bias=False))
+        self.main.add_module('flatten', nn.Flatten())
+        self.main.add_module('sigmoid', nn.Sigmoid())
+
+    def _block(self, in_channels, out_channels, kernel_size, stride, padding):
+        """
+        A sequential convolutional block for PokeGAN Discriminator v1.
+        Uses strided convolutions and LeakyReLU activation.
+        :param in_channels: num channels in input
+        :param out_channels: num channels in output
+        :param kernel_size: n x n size of kernel
+        :param stride: stride size
+        :param padding: padding size
+        :return: convolutional block including convolution, batchnorm, leakyrelu
+        """
+        block = nn.Sequential()
+        block.add_module('conv', nn.ConvTranspose2d(in_channels=in_channels,
+                                                    out_channels=out_channels,
+                                                    kernel_size=kernel_size,
+                                                    stride=stride,
+                                                    padding=padding,
+                                                    bias=False))
+        block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
+        block.add_module('leakyrelu', nn.LeakyReLU(negative_slope=0.2, inplace=True))
+        return block
+
+    def forward(self, x):
+        return self.main(x)
+
