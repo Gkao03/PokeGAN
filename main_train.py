@@ -31,7 +31,7 @@ if __name__ == "__main__":
     plt.axis("off")
     plt.title("Real Images")
     plt.imshow(
-        np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=5, normalize=True).cpu(), (1, 2, 0)))
+        np.transpose(vutils.make_grid(real_batch.to(device)[:64], padding=5, normalize=True).cpu(), (1, 2, 0)))
 
     # Plot the fake images from the last epoch
     plt.subplot(1, 2, 2)
