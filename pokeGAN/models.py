@@ -201,12 +201,12 @@ class PokeDiscriminatorv1(nn.Module):
         :return: convolutional block including convolution, batchnorm, leakyrelu
         """
         block = nn.Sequential()
-        block.add_module('conv', nn.ConvTranspose2d(in_channels=in_channels,
-                                                    out_channels=out_channels,
-                                                    kernel_size=kernel_size,
-                                                    stride=stride,
-                                                    padding=padding,
-                                                    bias=False))
+        block.add_module('conv', nn.Conv2d(in_channels=in_channels,
+                                           out_channels=out_channels,
+                                           kernel_size=kernel_size,
+                                           stride=stride,
+                                           padding=padding,
+                                           bias=False))
         block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
         block.add_module('leakyrelu', nn.LeakyReLU(negative_slope=0.2, inplace=True))
         return block
