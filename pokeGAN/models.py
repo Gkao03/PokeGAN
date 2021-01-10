@@ -5,9 +5,9 @@ import numpy as np
 import torch.nn.functional as F
 
 
-class Generator(nn.Module):
+class DCGANGenerator(nn.Module):
     """
-    The Generator architecture.
+    The Generator architecture for DCGAN
     """
     def __init__(self, z_dim, features_g, channels_img):
         """
@@ -59,9 +59,9 @@ class Generator(nn.Module):
         return self.main(x)
 
 
-class Discriminator(nn.Module):
+class DCGANDiscriminator(nn.Module):
     """
-    Discriminator architecture.
+    Discriminator architecture for DCGAN
     """
     def __init__(self, features_d, channels_img):
         """
