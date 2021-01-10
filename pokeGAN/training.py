@@ -12,14 +12,14 @@ from pokeGAN.models import *
 def init_model(args):
     device = get_device()
 
-    netG = DCGANGenerator(args.nz, args.ngf, args.nc).to(device)
+    netG = DCGANGenerator(args.nz, args.ngf, args.nc).to(device)  # change this to use a different model
     netG.apply(weights_init)
     if args.netG != '':
         netG.load_state_dict(torch.load(args.netG))
     # print(netG)
     summary(netG, (100, 1, 1))
 
-    netD = DCGANDiscriminator(args.ndf, args.nc).to(device)
+    netD = DCGANDiscriminator(args.ndf, args.nc).to(device)  # change this to use a different model
     netD.apply(weights_init)
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
