@@ -3,6 +3,7 @@ from pokeGAN.training import train
 from pokeGAN.functions import *
 import matplotlib.pyplot as plt
 import torchvision.utils as vutils
+import torch
 
 
 if __name__ == "__main__":
@@ -15,10 +16,17 @@ if __name__ == "__main__":
     device = get_device()
     # Grab a batch of real images from the dataloader
     dataloader = get_dataloader(args.image_dir, args.image_size, args.nc, args.batch_size)
-    real_batch = next(iter(dataloader))
+    real_batch = next(iter(dataloader))[0]
+    size = real_batch.size(0)
+
+    # create grid of 64 real images
+    while size < 64:
+        next_batch = next(iter(dataloader))[0]
+        real_batch = torch.cat((real_batch, next_batch), dim=0)
+        size = real_batch.size(0)
 
     # Plot the real images
-    plt.figure(figsize=(15, 15))
+    plt.figure(figsize=(10, 10))
     plt.subplot(1, 2, 1)
     plt.axis("off")
     plt.title("Real Images")
