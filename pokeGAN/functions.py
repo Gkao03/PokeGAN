@@ -47,7 +47,7 @@ def get_device():
 
 def get_dataset(dataroot, image_size, num_channels):
     transform = transform_image_function(image_size, num_channels)
-    normal_dataset = dset.ImageFolder(root=dataroot, transform=transform)
+    # normal_dataset = dset.ImageFolder(root=dataroot, transform=transform)
     dataset = dset.ImageFolder(root=dataroot, transform=transform)
     #
     # # Augment the dataset with mirrored images
