@@ -29,5 +29,5 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.axis("off")
     plt.title("Fake Images")
-    plt.imshow(np.transpose(img_list[-1], (1, 2, 0)))
+    plt.imshow(np.transpose(img_list[-1] * 0.5 + 0.5, (1, 2, 0)))
     plt.show()
