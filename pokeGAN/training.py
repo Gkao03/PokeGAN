@@ -18,7 +18,7 @@ def init_model(args):
     if args.netG != '':
         netG.load_state_dict(torch.load(args.netG))
     # print(netG)
-    summary(netG, (100, 1, 1))
+    summary(netG, (args.nz, 1, 1))
 
     # netD = DCGANDiscriminator(args.ndf, args.nc).to(device)  # change this to use a different model
     netD = PokeDiscriminatorv1().to(device)
@@ -26,7 +26,7 @@ def init_model(args):
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
     # print(netD)
-    summary(netD, (3, 64, 64))
+    summary(netD, (args.nc, args.image_size, args.image_size))
 
     return netG, netD
 
