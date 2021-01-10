@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torchvision.utils as vutils
+from torchsummary import summary
 import os
 from pokeGAN.functions import *
 from pokeGAN.models import *
@@ -11,17 +12,19 @@ from pokeGAN.models import *
 def init_model(args):
     device = get_device()
 
-    netG = DCGANGenerator(args.nz, args.ngf, args.nc).to(device)
+    netG = Generator(args.nz, args.ngf, args.nc).to(device)
     netG.apply(weights_init)
     if args.netG != '':
         netG.load_state_dict(torch.load(args.netG))
     # print(netG)
+    summary(netG, (100, 1, 1))
 
-    netD = DCGANDiscriminator(args.ndf, args.nc).to(device)
+    netD = Discriminator(args.ndf, args.nc).to(device)
     netD.apply(weights_init)
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
     # print(netD)
+    summary(netD, (4, 64, 64))
 
     return netG, netD
 
@@ -133,7 +136,7 @@ def train(args):
 
             # Output training stats
             print('[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
-                  % (epoch, args.num_epochs, batch_ndx, len(dataloader),
+                  % (epoch + 1, args.num_epochs, batch_ndx + 1, len(dataloader),
                      lossD.item(), lossG.item(), D_x, D_G_z1, D_G_z2))
 
             # Save Losses
