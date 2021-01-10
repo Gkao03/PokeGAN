@@ -45,9 +45,11 @@ def train(args):
     # create fixed noise for generator to see progression on single noise input
     fixed_noise = torch.randn(args.ngf, args.nz, 1, 1, device=device)  # 64, 100, 1, 1 for DCGAN generator
 
-    # set real and fake labels
-    real_label = 1
-    fake_label = 0
+    # real and fake labels
+    # ORIGINAL
+    # real_label = 1
+    # fake_label = 0
+    # We are actually using real = 0, fake = 1
 
     # use ADAM optimizer. Change lr and beta1 based on DCGAN paper
     optimizerG = optim.Adam(netG.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
@@ -73,9 +75,11 @@ def train(args):
             # ~ update Discriminator ~
             # first train with all real batch
             netD.zero_grad()  # zero out Discriminator gradient (don't accumulate)
-            optimizerD.zero_grad()
+            # optimizerD.zero_grad()
             output = netD(batch).view(-1)  # pass through Discriminator and flatten
-            label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
+            # label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
+            # Add some noisy labels to make the discriminator think harder.
+            label = torch.rand(output.size(0), dtype=torch.float, device=device) * (0.1 - 0) + 0
 
             # calculate loss
             lossD_real = criterion(output, label)
@@ -95,7 +99,9 @@ def train(args):
 
             # input fake batch through D and flatten. detach does not effect the gradients in netG
             output = netD(fake.detach()).view(-1)
-            label = torch.full((output.size(0),), fake_label, dtype=torch.float, device=device)
+            # label = torch.full((output.size(0),), fake_label, dtype=torch.float, device=device)
+            # Add some noisy labels to make the discriminator think harder.
+            label = torch.rand(output.size(0), dtype=torch.float, device=device) * (1 - 0.9) + 0.9
 
             # calculate D's loss on all fake batch
             lossD_fake = criterion(output, label)
@@ -115,13 +121,15 @@ def train(args):
 
             # ~ update Generator ~
             netG.zero_grad()
-            optimizerG.zero_grad()
+            # optimizerG.zero_grad()
 
             # forward pass fake batch through D
             output = netD(fake).view(-1)
 
             # create label for G. Remember these 'fake' images are treated as 'real' in G
-            label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
+            # label = torch.full((output.size(0),), real_label, dtype=torch.float, device=device)
+            # We want the discriminator to think these images are real. (real = 0)
+            label = torch.zeros(output.size(0), device=device)
 
             # calculate G's loss. Ability of G to fool D
             lossG = criterion(output, label)
