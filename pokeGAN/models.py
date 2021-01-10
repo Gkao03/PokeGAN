@@ -96,6 +96,7 @@ class DCGANDiscriminator(nn.Module):
         :param kernel_size: n x n size of kernel (4 x 4 for DCGAN)
         :param stride: stride size
         :param padding: padding size
+        :param is_input_layer: is it the input layer?
         :return: convolutional block including convolution, batchnorm (if not input layer), relu
         """
         block = nn.Sequential()
@@ -108,6 +109,58 @@ class DCGANDiscriminator(nn.Module):
         if is_input_layer is False:  # add batchnorm only if block is not the input layer
             block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
         block.add_module('leakyrelu', nn.LeakyReLU(negative_slope=0.2, inplace=True))  # uses slope 0.2 in paper
+        return block
+
+    def forward(self, x):
+        return self.main(x)
+
+
+class PokeGeneratorv1(nn.Module):
+    """
+    Version 1 Generator of PokeGAN
+    """
+    def __init__(self, z_dim):
+        """
+        Constructor for version 1 of Generator for PokeGAN
+        :param z_dim: size (dimension) of noise vector
+        :param features_g: size of feature maps in generator
+        :param channels_img: number of channels in image (4 for RGBA)
+        """
+        super(PokeGeneratorv1, self).__init__()
+        self.main = nn.Sequential()
+        self.main.add_module('block1', self._block(z_dim, 128, 4, 1, 0))
+        self.main.add_module('block2', self._block(128, 128, 4, 2, 1))
+        self.main.add_module('block3', self._block(128, 128, 4, 2, 1))
+        self.main.add_module('block4', self._block(128, 64, 4, 2, 1))
+
+        self.main.add_module('lastConv', nn.ConvTranspose2d(in_channels=64,
+                                                            out_channels=3,
+                                                            kernel_size=4,
+                                                            stride=2,
+                                                            padding=1,
+                                                            bias=False))
+        self.main.add_module('tanh', nn.Tanh())
+
+    def _block(self, in_channels, out_channels, kernel_size, stride, padding):
+        """
+        A sequential convolutional block for PokeGAN Generator v1.
+        Uses fractional-strided convolutions and ReLU activation.
+        :param in_channels: num channels in input
+        :param out_channels: num channels in output
+        :param kernel_size: n x n size of kernel
+        :param stride: stride size
+        :param padding: padding size
+        :return: convolutional block including convolution, batchnorm, relu
+        """
+        block = nn.Sequential()
+        block.add_module('conv', nn.ConvTranspose2d(in_channels=in_channels,
+                                                    out_channels=out_channels,
+                                                    kernel_size=kernel_size,
+                                                    stride=stride,
+                                                    padding=padding,
+                                                    bias=False))
+        block.add_module('batchnorm', nn.BatchNorm2d(out_channels))
+        block.add_module('relu', nn.ReLU(inplace=True))
         return block
 
     def forward(self, x):
