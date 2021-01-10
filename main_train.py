@@ -1,3 +1,4 @@
+from datetime import datetime
 from config import get_arguments, post_config
 from pokeGAN.training import train
 from pokeGAN.functions import *
@@ -37,5 +38,24 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.axis("off")
     plt.title("Fake Images")
-    plt.imshow(np.transpose(img_list[-1] * 0.5 + 0.5, (1, 2, 0)))
-    plt.show()
+    fake_image_grid = img_list[-1] * 0.5 + 0.5
+    plt.imshow(np.transpose(fake_image_grid, (1, 2, 0)))
+    # plt.show()
+
+    # get date
+    now = datetime.now()
+    dt_string = now.strftime("%d_%m_%Y_%H_%M")
+
+    # create filename to save plot
+    fname = 'output_images/' + dt_string
+    fname += "_epochs" + str(args.num_epochs)
+    fname += "_bsize" + str(args.batch_size)
+    fname += "_lr" + str(args.lr)
+    fname += "_imsize" + str(args.image_size)
+    fname += "_nz" + str(args.nz)
+    fname += "_ngf" + str(args.ngf)
+    fname += "_ndf" + str(args.ndf)
+    plt.savefig(fname + "_compare.png")
+
+    # save the fake grid
+    vutils.save_image(fake_image_grid, fname + "_fake.png")
