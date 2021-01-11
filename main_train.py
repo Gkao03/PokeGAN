@@ -38,7 +38,7 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.axis("off")
     plt.title("Fake Images")
-    fake_image_grid = img_list[-1] * 0.5 + 0.5
+    fake_image_grid = img_list[-1]
     plt.imshow(np.transpose(fake_image_grid, (1, 2, 0)))
     # plt.show()
 

@@ -43,7 +43,7 @@ def train(args):
     criterion = nn.BCELoss()
 
     # create fixed noise for generator to see progression on single noise input
-    fixed_noise = torch.randn(args.ngf, args.nz, 1, 1, device=device)  # 64, 100, 1, 1 for DCGAN generator
+    fixed_noise = torch.randn(args.ngf, args.nz, 1, 1, device=device)
 
     # real and fake labels
     # ORIGINAL
