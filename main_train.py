@@ -27,7 +27,7 @@ if __name__ == "__main__":
         size = real_batch.size(0)
 
     # Plot the real images
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(14, 7))
     plt.subplot(1, 2, 1)
     plt.axis("off")
     plt.title("Real Images")
