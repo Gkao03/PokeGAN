@@ -8,7 +8,7 @@ def get_arguments():
 
     parser.add_argument('--image_dir', default="images", help="path to training images")
     parser.add_argument('--image_size', type=int, default=64, help="n x n size of image to be resized to")
-    parser.add_argument('--batch_size', type=int, default=81, help="number of images in each batch")
+    parser.add_argument('--batch_size', type=int, default=8, help="number of images in each batch")
     parser.add_argument('--netG', default='', help="path to netG (to continue training) if model state exists")
     parser.add_argument('--netD', default='', help="path to netD (to continue training) if model state exists")
     parser.add_argument('--manual_seed', type=int, help='manual seed')
