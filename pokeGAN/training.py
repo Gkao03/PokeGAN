@@ -13,7 +13,7 @@ def init_model(args):
     device = get_device()
 
     # netG = DCGANGenerator(args.nz, args.ngf, args.nc).to(device)  # change this to use a different model
-    netG = PokeGeneratorv1(args.nz).to(device)
+    netG = PokeGeneratorv1(args.nz).to(device)  # change this to use a different model
     netG.apply(weights_init)
     if args.netG != '':
         netG.load_state_dict(torch.load(args.netG))
@@ -21,7 +21,7 @@ def init_model(args):
     summary(netG, (args.nz, 1, 1))
 
     # netD = DCGANDiscriminator(args.ndf, args.nc).to(device)  # change this to use a different model
-    netD = PokeDiscriminatorv1().to(device)
+    netD = PokeDiscriminatorv1().to(device)  # change this to use a different model
     netD.apply(weights_init)
     if args.netD != '':
         netD.load_state_dict(torch.load(args.netD))
